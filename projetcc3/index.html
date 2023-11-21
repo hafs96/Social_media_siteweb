@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <title>Document</title>
+    <script>
+        $(document).ready(function() {
+            // Fonction pour charger les messages existants à partir de la base de données et les afficher
+            function loadMessages() {
+                $.ajax({
+                    url: 'load_messages.php', // Fichier PHP pour récupérer les messages depuis la base de données
+                    type: 'GET',
+                    success: function(data) {
+                        // Manipulation des données pour afficher les messages dans l'interface utilisateur
+                        $('#chat-messages').html(data);
+                        scrollToBottom();
+                    }
+                });
+            }
+        
+            // Fonction pour envoyer un message
+            $('#chat-form').submit(function(e) {
+                e.preventDefault();
+                var message = $('input[name="message"]').val();
+        
+                $.ajax({
+                    url: $(this).attr('action'), // Fichier PHP pour envoyer le message à la base de données
+                    type: 'POST',
+                    data: {
+                        message: message
+                    },
+                    success: function() {
+                        $('input[name="message"]').val('');
+                        loadMessages();
+                    }
+                });
+            });
+        
+            // Fonction pour faire défiler la fenêtre de chat jusqu'au bas
+            function scrollToBottom() {
+                $('#chat-messages').scrollTop($('#chat-messages')[0].scrollHeight);
+            }
+        
+            // Chargement initial des messages
+            loadMessages();
+        
+            // Actualisation automatique des messages toutes les quelques secondes (facultatif)
+            setInterval(function() {
+                loadMessages();
+            }, 5000);
+        });
+        
+    </script>
+</head>
+<body>
+ 
+    <div class="chat-container">
+        <div class="navbar">
+            <ul style="list-style: none;">
+               <li><h1 class="profile-title" style="color: darkblue;">GenuisGuideOFPPT</h1></li> 
+
+                <li>
+                    <a class="active d-flex align-center-items fs-14 c-black rad-6 p-10" href="accuiel.php">
+                        <i class="fa-fw"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+                        </svg></i>
+                        <span>Accueil</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="d-flex align-center-items fs-14 c-black rad-6 p-10" href="profilep.php">
+                        <i class="fa-fw"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+                        </svg></i>
+                        <span>Profil</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="d-flex align-center-items fs-14 c-black rad-6 p-10" href="index.html">
+                        <i class="fa-fw">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-text-fill" viewBox="0 0 16 16">
+                                <path d="M16 8c0 3.866-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.584.296-1.925.864-4.181 1.234-.2.032-.352-.176-.273-.362.354-.836.674-1.95.77-2.966C.744 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7zM4.5 5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7zm0 2.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7zm0 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4z" />
+                            </svg>
+                        </i>
+                        <span>Chat</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="d-flex align-center-items fs-14 c-black rad-6 p-10" href="logout.php">
+                        <i class="fa-fw">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z" />
+                                <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z" />
+                            </svg>
+                        </i>
+                        <span>Déconnexion</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="chat-header">
+          
+            <h2>Disscussion</h2>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <!-- Messages will be displayed here -->
+        </div>
+        <div class="chat-input">
+            <form id="chat-form" method="post" action="send_message.php">
+                <input type="text" name="message" placeholder="Tapez votre message..." autocomplete="off" required>
+                <button type="submit">Envoyer</button>
+            </form>
+        </div>
+        
+    </div>
+</body>
+</html>
